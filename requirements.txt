@@ -3,4 +3,4 @@ numpy==1.15.4
 matplotlib==3.0.2
 watermark==2.0.2
 ipython>=3.2.1
-jupyterlab==2.2.6
+jupyterlab==2.2.10
