@@ -43,5 +43,5 @@ maestro
 
 # OSX file system
 .DS_Store
-
+.idea/
 *.pyc
