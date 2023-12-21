@@ -25,11 +25,11 @@ Author : Hyoukjun Kwon (hyoukjun@gatech.edu)
 
 namespace maestro {
 
-  namespace DSE {
+    namespace DSE {
 
-    enum class OptimizationTarget {Runtime, Energy, PerformancePerWatt};
+        enum class OptimizationTarget {Runtime, Energy, PerformancePerWatt};
 
-  }; // End of namespace DSE
+    }; // End of namespace DSE
 }; // End of namesapce maestro
 
 #endif

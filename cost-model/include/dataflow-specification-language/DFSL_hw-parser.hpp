@@ -40,144 +40,136 @@ Author : Hyoukjun Kwon (hyoukjun@gatech.edu)
 
 
 namespace maestro {
-  namespace DFSL {
+    namespace DFSL {
 
-    //Indentation shows the structure of the state machine in HWParser.
-    enum class HWParserState {Idle,
-                              NumPEsIdentifier,
-                              NumPEsValue,
-                              L1SizeIdentifier,
-                              L1SizeValue,
-                              L2SizeIdentifier,
-                              L2SizeValue,
-                              NoCBWIdentifier,
-                              NoCBWValue,
-                              NoCNumHopsIdentifier,
-                              NoCNumHopsValue,
-                              //felix
-                              OffChipBWIdentifier,
-                              OffChipBWValue
-                           };
+        //Indentation shows the structure of the state machine in HWParser.
+        enum class HWParserState {Idle,
+            NumPEsIdentifier,
+            L1SizeIdentifier,
+            L2SizeIdentifier,
+            NoCBWIdentifier,
+            NoCNumHopsIdentifier,
+            OffChipBWIdentifier,
+        };
 
-    class HWConfig : public MAESTROClass {
-      public:
-        int num_pes_ = 1;
-        int l1_size_ = INT_MAX;
-        int l2_size_ = INT_MAX;
-        int noc_bw_ = INT_MAX;
-        int noc_hops_ = 1;
-        //felix
-        int off_chip_bw_ = INT_MAX;
-    };
+        class HWConfig : public MAESTROClass {
+        public:
+            int num_pes_ = 1;
+            int l1_size_ = INT_MAX;
+            int l2_size_ = INT_MAX;
+            int noc_bw_ = INT_MAX;
+            int noc_hops_ = 1;
+            int off_chip_bw_ = INT_MAX;
+        };
 
-    class HWParser : public InputParser {
-      public:
-        HWParser(std::string file_name) : InputParser(file_name) {
-        }
+        class HWParser : public InputParser {
+        public:
+            HWParser(std::string file_name) : InputParser(file_name) {
+            }
 
-        std::shared_ptr<DFSL::HWConfig> ParseHW() {
-          std::string line;
-          boost::char_separator<char> sep(" ,->():\t;");
-          int line_number = 1;
-          auto ret = std::make_shared<DFSL::HWConfig>();
-          while(std::getline(in_file_, line)) {
-            boost::tokenizer<boost::char_separator<char>> tokn(line, sep);
+            std::shared_ptr<DFSL::HWConfig> ParseHW() {
+                std::string line;
+                boost::char_separator<char> sep(" ,->():\t;");
+                int line_number = 1;
+                auto ret = std::make_shared<DFSL::HWConfig>();
+                while(std::getline(in_file_, line)) {
+                    boost::tokenizer<boost::char_separator<char>> tokn(line, sep);
 
-            for(auto &tkn : tokn) {
+                    for(auto &tkn : tokn) {
 
-              if(tkn.size() >= 2 && tkn.substr(0,2) == DFSL::comments_) {
-                line_number++;
-                break;
-              }
+                        if(tkn.size() >= 2 && tkn.substr(0,2) == DFSL::comments_) {
+                            line_number++;
+                            break;
+                        }
 
-              switch(state_) {
-                case HWParserState::Idle: {
-                  if(tkn == DFSL::tmp_num_pes_decl_) {
-                    state_ = HWParserState::NumPEsIdentifier;
-                  }
-                  else if(tkn == DFSL::tmp_l1size_decl_) {
-                    state_ = HWParserState::L1SizeIdentifier;
-                  }
-                  else if(tkn == DFSL::tmp_l2size_decl_) {
-                    state_ = HWParserState::L2SizeIdentifier;
-                  }
-                  else if(tkn == DFSL::tmp_noc_bw_decl_) {
-                    state_ = HWParserState::NoCBWIdentifier;
-                  }
-                  else if(tkn == DFSL::tmp_noc_hops_decl_) {
-                    state_ = HWParserState::NoCNumHopsIdentifier;
-                  }
-                  //felix
-                  else if(tkn == DFSL::tmp_offchip_bw_decl_) {
-                    state_ = HWParserState::OffChipBWIdentifier;
-                  }
-                  else {
+                        switch(state_) {
+                            case HWParserState::Idle: {
+                                if(tkn == DFSL::tmp_num_pes_decl_) {
+                                    state_ = HWParserState::NumPEsIdentifier;
+                                }
+                                else if(tkn == DFSL::tmp_l1size_decl_) {
+                                    state_ = HWParserState::L1SizeIdentifier;
+                                }
+                                else if(tkn == DFSL::tmp_l2size_decl_) {
+                                    state_ = HWParserState::L2SizeIdentifier;
+                                }
+                                else if(tkn == DFSL::tmp_noc_bw_decl_) {
+                                    state_ = HWParserState::NoCBWIdentifier;
+                                }
+                                else if(tkn == DFSL::tmp_noc_hops_decl_) {
+                                    state_ = HWParserState::NoCNumHopsIdentifier;
+                                }
+                                    //felix
+                                else if(tkn == DFSL::tmp_offchip_bw_decl_) {
+                                    state_ = HWParserState::OffChipBWIdentifier;
+                                }
+                                else {
+                                    ParseError(line_number);
+                                }
+                                break;
+                            }
+
+                            case HWParserState::NumPEsIdentifier: {
+                                ret->num_pes_ = std::atoi(tkn.c_str());
+                                state_ = HWParserState::Idle;
+                                break;
+                            }
+
+                            case HWParserState::L1SizeIdentifier: {
+                                std::cout << "" << std::endl;
+                                ret->l1_size_ = std::atoi(tkn.c_str());
+                                state_ = HWParserState::Idle;
+                                break;
+                            }
+
+                            case HWParserState::L2SizeIdentifier: {
+                                ret->l2_size_ = std::atoi(tkn.c_str());
+                                state_ = HWParserState::Idle;
+                                break;
+                            }
+
+                            case HWParserState::NoCBWIdentifier: {
+                                ret->noc_bw_ = std::atoi(tkn.c_str());
+                                state_ = HWParserState::Idle;
+                                break;
+                            }
+
+                            case HWParserState::NoCNumHopsIdentifier: {
+                                ret->noc_hops_ = std::atoi(tkn.c_str());
+                                state_ = HWParserState::Idle;
+                                break;
+                            }
+
+                            case HWParserState::OffChipBWIdentifier: {
+                                ret->off_chip_bw_ = std::atoi(tkn.c_str());
+                                state_ = HWParserState::Idle;
+                                break;
+                            }
+
+                            default: {
+                                ParseError(line_number);
+                                break;
+                            }
+                        } // End of switch(state_)
+                    } // End of for(tkn)
+
+                    line_number++;
+
+                } // End of while(getline(...))
+
+                if(state_ != HWParserState::Idle) {
                     ParseError(line_number);
-                  }
-                  break;
                 }
 
-                case HWParserState::NumPEsIdentifier: {
-                  ret->num_pes_ = std::atoi(tkn.c_str());
-                  state_ = HWParserState::Idle;
-                  break;
-                }
+                return ret;
 
-                case HWParserState::L1SizeIdentifier: {
-                  std::cout << "" << std::endl;
-                  ret->l1_size_ = std::atoi(tkn.c_str());
-                  state_ = HWParserState::Idle;
-                  break;
-                }
+            } // End of ParseHW
 
-                case HWParserState::L2SizeIdentifier: {
-                  ret->l2_size_ = std::atoi(tkn.c_str());
-                  state_ = HWParserState::Idle;
-                  break;
-                }
+        protected:
+            HWParserState state_ = HWParserState::Idle;
 
-                case HWParserState::NoCBWIdentifier: {
-                  ret->noc_bw_ = std::atoi(tkn.c_str());
-                  state_ = HWParserState::Idle;
-                  break;
-                }
-
-                case HWParserState::NoCNumHopsIdentifier: {
-                  ret->noc_hops_ = std::atoi(tkn.c_str());
-                  state_ = HWParserState::Idle;
-                  break;
-                }
-                //felix
-                case HWParserState::OffChipBWIdentifier: {
-                  ret->off_chip_bw_ = std::atoi(tkn.c_str());
-                  state_ = HWParserState::Idle;
-                  break;
-                }
-
-                default: {
-                  ParseError(line_number);
-                  break;
-                }
-              } // End of switch(state_)
-            } // End of for(tkn)
-
-            line_number++;
-
-          } // End of while(getline(...))
-
-          if(state_ != HWParserState::Idle) {
-            ParseError(line_number);
-          }
-
-          return ret;
-
-        } // End of ParseHW
-
-      protected:
-        HWParserState state_ = HWParserState::Idle;
-
-    };
-  }; // End of namespace DFSL
+        };
+    }; // End of namespace DFSL
 }; // End of namespace maestro
 
 #endif

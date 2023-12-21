@@ -29,57 +29,57 @@ Author : Hyoukjun Kwon (hyoukjun@gatech.edu)
 #include "BASE_constants.hpp"
 
 namespace maestro {
-	namespace DFA {
+    namespace DFA {
 
-	  enum class TensorClass {InputTensor, OutputTensor};
+        enum class TensorClass {InputTensor, OutputTensor};
 
-		class Tensor {
-			public:
-				Tensor(std::string name,
-				       TensorClass tensor_class,
-				       DataClass data_class,
-				       std::shared_ptr<std::list<std::string>> correlated_variables) :
-				  tensor_name_(name),
-				  tensor_class_(tensor_class),
-				  data_class_(data_class),
-				  coupled_variables_(correlated_variables) {
-				}
+        class Tensor {
+        public:
+            Tensor(std::string name,
+                   TensorClass tensor_class,
+                   DataClass data_class,
+                   std::shared_ptr<std::list<std::string>> correlated_variables) :
+                    tensor_name_(name),
+                    tensor_class_(tensor_class),
+                    data_class_(data_class),
+                    coupled_variables_(correlated_variables) {
+            }
 
-				std::string GetTensorName() {
-				  return tensor_name_;
-				}
+            std::string GetTensorName() {
+                return tensor_name_;
+            }
 
-				TensorClass GetTensorClass() {
-				  return tensor_class_;
-				}
+            TensorClass GetTensorClass() {
+                return tensor_class_;
+            }
 
-				DataClass GetDataClass() {
-				  return data_class_;
-				}
+            DataClass GetDataClass() {
+                return data_class_;
+            }
 
-				std::shared_ptr<std::list<std::string>> GetCoupledVariables() {
-				  return coupled_variables_;
-				}
+            std::shared_ptr<std::list<std::string>> GetCoupledVariables() {
+                return coupled_variables_;
+            }
 
-				bool HasVariable(std::string search_var) {
-				  bool ret =false;
-				  for(auto& var : *coupled_variables_) {
-				    if(var == search_var) {
-				      ret = true;
-				      break;
-				    }
-				  }
-				  return ret;
-				}
+            bool HasVariable(std::string search_var) {
+                bool ret =false;
+                for(auto& var : *coupled_variables_) {
+                    if(var == search_var) {
+                        ret = true;
+                        break;
+                    }
+                }
+                return ret;
+            }
 
-			protected:
-				TensorClass tensor_class_;
-				DataClass data_class_;
-				std::string tensor_name_;
-				std::shared_ptr<std::list<std::string>> coupled_variables_;
-		}; // End of class Tensor
+        protected:
+            TensorClass tensor_class_;
+            DataClass data_class_;
+            std::string tensor_name_;
+            std::shared_ptr<std::list<std::string>> coupled_variables_;
+        }; // End of class Tensor
 
-	}; // End of namespace DFA
+    }; // End of namespace DFA
 }; // End of namespace maestro
 
 #endif

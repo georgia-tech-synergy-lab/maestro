@@ -24,19 +24,19 @@ Author : Hyoukjun Kwon (hyoukjun@gatech.edu)
 #define MAESTRO_DSE_SCALING_COEFFICIENTS_HPP_
 
 namespace maestro {
-  namespace DSE {
-    namespace scaling_model {
-      /* Embedded scaling model */
-      // Based on 28nm technology
-      const double matrix_arbiter_c2 = 1.2886;
-      const double matrix_arbirter_c1 = 5.5814;
-      const double matrix_arbiter_c0 = -23.711;
+    namespace DSE {
+        namespace scaling_model {
+            /* Embedded scaling model */
+            // Based on 28nm technology
+            const double matrix_arbiter_c2 = 1.2886;
+            const double matrix_arbirter_c1 = 5.5814;
+            const double matrix_arbiter_c0 = -23.711;
 
-      const double bus_c1 = 14.662;
-      const double bus_c0 = 28.895;
+            const double bus_c1 = 14.662;
+            const double bus_c0 = 28.895;
 
-    }; // End of namespace scaling_model
-  }; // End of namespace DSE
+        }; // End of namespace scaling_model
+    }; // End of namespace DSE
 }; // End of namespace maestro
 
 

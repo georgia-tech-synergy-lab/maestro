@@ -26,33 +26,31 @@ Author : Hyoukjun Kwon (hyoukjun@gatech.edu)
 #include <iostream>
 
 namespace maestro {
-  namespace TL {
-    class MessagePrinter {
-      public:
-        MessagePrinter(int target_lv) : print_lv_(target_lv) {
-        }
-
-        void PrintMsg(int lv, std::string msg, bool change_line = true) {
-          if(lv <= print_lv_) {
-            if(change_line) {
-              std::cout << msg << std::endl;
+    namespace TL {
+        class MessagePrinter {
+        public:
+            MessagePrinter(int target_lv) : print_lv_(target_lv) {
             }
-            else {
-              std::cout << msg;
+
+            void PrintMsg(int lv, std::string msg, bool change_line = true) {
+                if(lv <= print_lv_) {
+                    if(change_line) {
+                        std::cout << msg << std::endl;
+                    }
+                    else {
+                        std::cout << msg;
+                    }
+                }
             }
-          }
-        }
 
-        void SetPrintLv(int new_lv) {
-          print_lv_ = new_lv;
-        }
+            void SetPrintLv(int new_lv) {
+                print_lv_ = new_lv;
+            }
 
-      protected:
-        int print_lv_= 0;
-    };
-
-
-  };
-};
+        protected:
+            int print_lv_= 0;
+        };
+    }
+}
 
 #endif

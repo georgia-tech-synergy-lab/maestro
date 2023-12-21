@@ -27,16 +27,10 @@ Author : Hyoukjun Kwon (hyoukjun@gatech.edu)
 #include <string>
 
 namespace maestro{
-  const std::string init_dim = "Init";
-  const std::string wgt_init_dim = "Init";
-  const std::string ipt_init_dim = "Init";
 
-
-
-  enum class DataClass{Input, Weight, Output, NumDataClasses};
-  const double l1_energy_multiplier = 1.68;
-  const double l2_energy_multiplier = 18.61;
-
+    enum class DataClass{Input, Weight, Output, NumDataClasses};
+    const double l1_energy_multiplier = 1.68;
+    const double l2_energy_multiplier = 18.61;
 
 }; // End of namespace maestro
 
