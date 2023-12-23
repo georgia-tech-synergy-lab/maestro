@@ -32,7 +32,7 @@ Author : Hyoukjun Kwon (hyoukjun@gatech.edu)
 
 namespace maestro {
     namespace DFA {
-        enum class IterationPosition {Init, Steady, Edge, NumIterationPosition};
+        enum class IterationPosition {Init, Steady, Edge};
 
         // Over one dimension
         class IterationState : public MAESTROClass {
@@ -172,11 +172,6 @@ namespace maestro {
                 iterator operator++() {
                     map_iterator_++;
                     return *this;
-                    /*
-                    this->curr_idx_++;
-                    iterator iter = *this;
-                    return iter;
-                    */
                 }
 
                 std::shared_ptr<IterationState>& operator*() {
@@ -250,26 +245,12 @@ namespace maestro {
                 return ret;
             }
 
-            bool HasSpEdgeEdgeCase() {
-                bool ret = false;
-
-                for(auto& iter_state : *iter_states_ ) {
-                    if(iter_state.second->HasSpEdgeEdge()) {
-                        ret = true;
-                    }
-                }
-
-                return ret;
-            }
-
         protected:
             int num_occurrences_ = 1;
             std::shared_ptr<std::map<std::string, std::shared_ptr<IterationState>>> iter_states_;
 
         }; // End of class IterationStatus
-
-
-    };
-};
+    }
+}
 
 #endif

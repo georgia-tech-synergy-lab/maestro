@@ -5,9 +5,8 @@
 namespace maestro {
     namespace CA {
 
-        enum class IterationStatus {Init, Steady, Edge, Unroll, InitEdge, InitUnroll};
+        enum class IterationStatus {Init, Edge, Unroll};
         enum class EstimationType {Min, Max, Exact, NumEstimationTypes};
-        const int num_iter_status = 3;
 
     };
 };

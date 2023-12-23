@@ -254,9 +254,7 @@ namespace maestro {
                 }
             } // End of void ConstructIterationStatusTable
         }; // End of class IterationAnalysis
-
-
-    };
-};
+    }
+}
 
 #endif

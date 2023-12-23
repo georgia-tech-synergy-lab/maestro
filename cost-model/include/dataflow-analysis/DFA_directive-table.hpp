@@ -195,8 +195,7 @@ namespace maestro {
             std::shared_ptr<std::vector<std::shared_ptr<directive::Directive>>> directives_;
 
         }; // End of class DirectiveTable
-
-    }; // End of namespace DFA
-}; // End of namesapce maestro
+    } // End of namespace DFA
+} // End of namesapce maestro
 
 #endif

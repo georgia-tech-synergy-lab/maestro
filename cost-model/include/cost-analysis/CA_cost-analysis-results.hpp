@@ -153,17 +153,6 @@ namespace maestro {
                 }
             }
 
-            long GetPureRd(BufferType target_buffer, DataClass data_class) {
-                int data_class_id = static_cast<int>(data_class);
-
-                if(target_buffer == BufferType::Upstream) {
-                    return upstream_buffer_pure_read_[data_class_id];
-                }
-                else {
-                    return downstream_buffer_pure_read_[data_class_id];
-                }
-            }
-
             long GetPeakBWReq() {
                 return peak_bw_req_;
             }
@@ -206,17 +195,6 @@ namespace maestro {
                 num_sub_clusters_ = num_clusters;
             }
 
-            void UpdatePureRd(BufferType target_buffer, DataClass data_class, long counts) {
-                int data_class_id = static_cast<int>(data_class);
-
-                if(target_buffer == BufferType::Upstream) {
-                    upstream_buffer_pure_read_[data_class_id] = counts;
-                }
-                else if(target_buffer == BufferType::Downstream) {
-                    downstream_buffer_pure_read_[data_class_id] = counts;
-                }
-            }
-
             LayerType GetLayerType() {
                 return layer_type_;
             }
@@ -227,14 +205,6 @@ namespace maestro {
 
             long GetNumSpatialOccurrences() {
                 return num_sp_occurrences_;
-            }
-
-            void AddIterStatusInfo(std::shared_ptr<DFA::IterationStatus> iter_status) {
-                iter_status_info_->push_back(iter_status);
-            }
-
-            std::shared_ptr<std::vector<std::shared_ptr<DFA::IterationStatus>>> GetIterStatusStack() {
-                return iter_status_info_;
             }
 
             void SetNumAvgActiveClusters(double active_clusters) {
@@ -270,13 +240,8 @@ namespace maestro {
             long downstream_buffer_write_[static_cast<int>(DataClass::NumDataClasses)] = {0};
             long downstream_buffer_read_estimate[static_cast<int>(DataClass::NumDataClasses)] = {0};
 
-            long upstream_buffer_pure_read_[static_cast<int>(DataClass::NumDataClasses)] = {0};
-            long downstream_buffer_pure_read_[static_cast<int>(DataClass::NumDataClasses)] = {0};
-
             long upstream_buffer_size_req_[static_cast<int>(DataClass::NumDataClasses)] = {0};
             long downstream_buffer_size_req_[static_cast<int>(DataClass::NumDataClasses)] = {0};
-
-            double bandwidth_requirement_[static_cast<int>(DataClass::NumDataClasses)] = {0};
 
             long ingress_delay_[static_cast<int>(ValueType::NumValTypes)] = {0};
             long egress_delay_[static_cast<int>(ValueType::NumValTypes)] = {0};
@@ -284,7 +249,6 @@ namespace maestro {
 
             long peak_bw_req_ = 0;
             double avg_bw_req_ = 0;
-            //felix
             long offchip_bw_req_ = 0;
             long num_computations_ = 0;
             long top_level_num_computations_ = 0;

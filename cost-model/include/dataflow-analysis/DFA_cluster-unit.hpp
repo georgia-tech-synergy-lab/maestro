@@ -273,103 +273,6 @@ namespace maestro {
                 return ret;
             }
 
-
-            std::vector<std::string> GetOuterTemporalIterationVars () {
-                std::vector<std::string> ret;
-
-                for(int idx = 0; idx < upper_spatial_map_idx_; idx++) {
-                    if(dataflow_->at(idx)->GetClass() == directive::DirectiveClass::TemporalMap) {
-                        ret.push_back(dataflow_->at(idx)->GetVariable());
-                    }
-                }
-
-                return ret;
-            }
-
-            std::vector<std::string> GetInnerTemporalIterationVars () {
-                std::vector<std::string> ret;
-
-                for(int idx = upper_spatial_map_idx_; idx < dataflow_->size(); idx++) {
-                    if(dataflow_->at(idx)->GetClass() == directive::DirectiveClass::TemporalMap) {
-                        ret.push_back(dataflow_->at(idx)->GetVariable());
-                    }
-                }
-
-                return ret;
-            }
-
-            std::shared_ptr<std::vector<std::string>> GetAllVarsInDirectiveClass (DFA::directive::DirectiveClass target_class) {
-                std::shared_ptr<std::vector<std::string>> ret = std::make_shared<std::vector<std::string>>();
-
-                for(auto directive : *dataflow_) {
-                    if(target_class == DFA::directive::DirectiveClass::Invalid
-                       || directive->GetClass() == target_class) {
-                        ret->push_back(directive->GetVariable());
-                    }
-                }
-
-                return ret;
-            }
-
-            std::shared_ptr<std::vector<std::string>> GetAllDimensionVars () {
-                std::shared_ptr<std::vector<std::string>> ret = std::make_shared<std::vector<std::string>>();
-
-                for(auto directive : *dataflow_) {
-                    ret->push_back(directive->GetVariable());
-                }
-
-                return ret;
-            }
-
-
-
-            long GetNumTemporalIterations_SingleDim(std::string var, bool edge_case) {
-                long ret = 0;
-
-                auto dim_size = dimensions_->GetSize(var);
-                auto directive = dataflow_->FindDirective(var);
-
-                //TODO: Fix this hard-coded part
-                if(var == "X") {
-                    dim_size = dim_size - dimensions_->GetSize("S") +1;
-                }
-                else if(var == "Y") {
-                    dim_size = dim_size - dimensions_->GetSize("R") +1;
-                }
-
-                if(directive->GetClass() ==  directive::DirectiveClass::TemporalMap) {
-                    if(!edge_case) {
-                        ret = dim_size / directive->GetOfs();
-                    }
-                    else {
-                        ret = dim_size % directive->GetOfs(); //TODO: Fix this
-                    }
-                }
-
-                return ret;
-            }
-
-
-            long GetNumSpatialSparseIterations(int blk_sparsity_size, int num_sparse_blks) {
-                long ret;
-
-                auto spatial_map_directive = dataflow_->at(upper_spatial_map_idx_);
-                auto spatially_mapped_dimension = spatial_map_directive->GetVariable();
-
-                auto sp_dim_size = dimensions_->GetSize(spatially_mapped_dimension);
-                auto sp_map_ofs = spatial_map_directive->GetOfs();
-
-                sp_dim_size = sp_dim_size - blk_sparsity_size * num_sparse_blks;
-
-                ret = sp_dim_size / (sp_map_ofs * cluster_size_);
-
-                if(sp_dim_size % (sp_map_ofs * cluster_size_) != 0) {
-                    ret++;
-                }
-
-                return ret;
-            }
-
             long GetNumTotalIterations() {
                 long ret = 1;
 
@@ -467,7 +370,6 @@ namespace maestro {
 
 
         protected:
-//        directive::ClusterType type_;
 
             int cluster_level_ = -1;
             int cluster_size_ = 1;
@@ -684,20 +586,14 @@ namespace maestro {
                 //Functions regarding spatial mapping always need to be called first
                 AnalyzeSpatialMapIdx();
                 AnalyzeInnerTemporalMapIdx();
-
                 AnalyzeNumSpatialIterations();
-
                 AnalyzeSpatialEdgeCase();
-
                 AnalyzeMappingSizes();
-
                 AnalyzeNumPartialOutputs();
-
             }
-
         }; // End of class ClusterUnit
-    }; // End of namespace DFA
-}; // End of namespace maestro
+    } // End of namespace DFA
+} // End of namespace maestro
 
 
 #endif

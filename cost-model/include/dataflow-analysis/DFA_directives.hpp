@@ -269,9 +269,8 @@ namespace maestro {
                 int size_;
                 ClusterType type_ = ClusterType::Logical;
             };// End of class Cluster
-
-        }; // End of namespace directive
-    }; // End of namespace DFA
-}; // End of namespace maestro
+        } // End of namespace directive
+    } // End of namespace DFA
+} // End of namespace maestro
 
 #endif

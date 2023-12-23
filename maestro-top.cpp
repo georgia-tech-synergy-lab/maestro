@@ -23,28 +23,13 @@ Author : Hyoukjun Kwon (hyoukjun@gatech.edu)
 #include <iostream>
 #include <memory>
 #include <vector>
-#include <list>
 
-#include <boost/program_options.hpp>
-
-#include "BASE_constants.hpp"
 #include "BASE_base-objects.hpp"
 #include "option.hpp"
-
-#include "DFA_tensor.hpp"
-
-#include "AHW_noc-model.hpp"
-
-#include "CA_cost-analysis-results.hpp"
 
 #include "API_configuration.hpp"
 #include "API_user-interface-v2.hpp"
 
-
-#include "DSE_cost-database.hpp"
-#include "DSE_design_point.hpp"
-#include "DSE_hardware_modules.hpp"
-#include "DSE_csv_writer.hpp"
 
 int main(int argc, char** argv)
 {
@@ -58,14 +43,7 @@ int main(int argc, char** argv)
 
     maestro::InitializeBaseObjects(option.message_print_lv);
 
-    int num_pes = option.np;
-
-    /*
-     * Hard coded part; will Fix it
-     */
-
     if(option.bw_sweep && option.top_bw_only) {
-        int min_bw = option.bw_tick;
 
         for(int bw = option.min_noc_bw; bw <= option.max_noc_bw; bw += option.bw_tick) {
             std::shared_ptr<std::vector<bool>> noc_multcast = std::make_shared<std::vector<bool>>();
@@ -119,8 +97,6 @@ int main(int argc, char** argv)
         std::shared_ptr<std::vector<int>> noc_latency = std::make_shared<std::vector<int>>();
         std::shared_ptr<std::vector<int>> noc_bw = std::make_shared<std::vector<int>>();
 
-        //felix
-
         noc_bw->push_back(option.bw);
         noc_bw->push_back(option.bw);
         noc_bw->push_back(option.bw);
@@ -155,9 +131,5 @@ int main(int argc, char** argv)
 
         auto res = api->AnalyzeNeuralNetwork(option.print_res_to_screen, option.print_res_to_csv_file, option.print_log_file);
     }
-    /////////////////////////////////////////////////////////////////
-
-
-
     return 0;
 }

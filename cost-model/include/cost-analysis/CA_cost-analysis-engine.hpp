@@ -110,9 +110,8 @@ namespace maestro {
                 /* Cost stats */
                 long peak_noc_bw_req = 0;
                 long double avg_noc_bw_req = 0;
-                //felix
                 long off_chip_bw_req = 0;
-                //
+
                 long double delays[static_cast<int>(DelayType::NumDelayTypes)][static_cast<int>(ValueType::NumValTypes)];
                 for (int i = 0; i < static_cast<int>(DelayType::NumDelayTypes); i++) {
                     delays[i][static_cast<int>(ValueType::Min)] = std::numeric_limits<long double>::max();
