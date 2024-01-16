@@ -36,8 +36,6 @@ Author : Hyoukjun Kwon (hyoukjun@gatech.edu)
 namespace maestro {
     namespace DFA {
 
-        const int invalid_size = -1;
-
         class DimensionTable : public MAESTROClass {
         public:
             class iterator {
@@ -191,10 +189,8 @@ namespace maestro {
 
         protected:
             std::map<std::string, std::shared_ptr<LayerDimension>> dim_table_;
-
             std::shared_ptr<DimensionOverlapInfoTable> dim_overlap_table_;
-
         };
-    };
-};
+    }
+}
 #endif

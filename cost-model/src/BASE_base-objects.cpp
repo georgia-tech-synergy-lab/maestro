@@ -29,7 +29,6 @@ namespace maestro {
     //Singleton objects for common functionalities
     std::shared_ptr<TL::ErrorHandler> error_handler;
     std::shared_ptr<TL::MessagePrinter> message_printer;
-    int printout_level = 0;
 
     void InitializeBaseObjects(int print_lv = 0) {
         error_handler = std::make_shared<TL::ErrorHandler>();
