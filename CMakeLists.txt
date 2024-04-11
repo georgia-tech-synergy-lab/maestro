@@ -21,7 +21,6 @@ include_directories(cost-model/include/dataflow-specification-language)
 include_directories(cost-model/include/design-space-exploration)
 include_directories(cost-model/include/tools)
 include_directories(cost-model/include/user-api)
-
 link_directories(/opt/homebrew/lib)
 
 add_executable(maestro

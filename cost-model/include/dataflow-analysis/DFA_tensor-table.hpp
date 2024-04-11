@@ -32,138 +32,138 @@ Author : Hyoukjun Kwon (hyoukjun@gatech.edu)
 #include "DFA_tensor.hpp"
 
 namespace maestro {
-  namespace DFA {
-    class TensorTable : public MAESTROClass {
-      public:
-        /*
-         * Custom iterator to support "for-each" loop over this data structure
-         */
-        class iterator {
-          private:
-            std::shared_ptr<std::vector<std::shared_ptr<DFA::Tensor>>> iter_tensors_;
-          public:
+    namespace DFA {
+        class TensorTable : public MAESTROClass {
+        public:
+            /*
+             * Custom iterator to support "for-each" loop over this data structure
+             */
+            class iterator {
+            private:
+                std::shared_ptr<std::vector<std::shared_ptr<DFA::Tensor>>> iter_tensors_;
+            public:
 
-            int curr_idx_;
+                int curr_idx_;
 
-            iterator(std::shared_ptr<std::vector<std::shared_ptr<DFA::Tensor>>> ptr, int idx) :
-              iter_tensors_(ptr), curr_idx_(idx) {
+                iterator(std::shared_ptr<std::vector<std::shared_ptr<DFA::Tensor>>> ptr, int idx) :
+                        iter_tensors_(ptr), curr_idx_(idx) {
+                }
+
+                iterator operator++() {
+                    this->curr_idx_++;
+                    iterator iter = *this;
+                    return iter;
+                }
+
+                std::shared_ptr<DFA::Tensor>& operator*() {
+                    return iter_tensors_->at(curr_idx_);
+                }
+
+                bool operator==(const iterator& rhs) {
+                    return (this->curr_idx_ == rhs.curr_idx_);
+                }
+
+                bool operator!=(const iterator& rhs) {
+                    return (this->curr_idx_ != rhs.curr_idx_);
+                }
+
+            }; // End of class iterator for class Directive_table
+
+            iterator begin() {
+                iterator iter(tensors_, 0);
+                return iter;
             }
 
-            iterator operator++() {
-              this->curr_idx_++;
-              iterator iter = *this;
-              return iter;
+            iterator end() {
+                iterator iter(tensors_, tensors_->size());
+                return iter;
+            }
+            /***********************************************************************************************/
+
+
+            TensorTable() {
+                tensors_ = std::make_shared<std::vector<std::shared_ptr<DFA::Tensor>>>();
             }
 
-            std::shared_ptr<DFA::Tensor>& operator*() {
-              return iter_tensors_->at(curr_idx_);
+            std::shared_ptr<DFA::Tensor> at (int idx) {
+                if(idx < tensors_->size()) {
+                    return tensors_->at(idx);
+                }
+                else {
+                    return nullptr;
+                }
             }
 
-            bool operator==(const iterator& rhs) {
-              return (this->curr_idx_ == rhs.curr_idx_);
+            std::shared_ptr<DFA::Tensor> operator[] (int idx) {
+                return this->at(idx);
             }
 
-            bool operator!=(const iterator& rhs) {
-              return (this->curr_idx_ != rhs.curr_idx_);
+            void AddTensor(std::shared_ptr<DFA::Tensor> new_tensor) {
+                tensors_->push_back(new_tensor);
             }
 
-        }; // End of class iterator for class Directive_table
 
-        iterator begin() {
-          iterator iter(tensors_, 0);
-          return iter;
-        }
+            void AddTensor(std::string tensor_name, DFA::TensorClass tensor_class, DataClass data_class, std::vector<std::string> correlated_varaibles) {
 
-        iterator end() {
-          iterator iter(tensors_, tensors_->size());
-          return iter;
-        }
-        /***********************************************************************************************/
+                std::shared_ptr<std::list<std::string>> corr_vars_to_be_added = std::make_shared<std::list<std::string>>();
 
+                for(auto var : correlated_varaibles) {
+                    corr_vars_to_be_added->push_back(var);
+                }
 
-        TensorTable() {
-          tensors_ = std::make_shared<std::vector<std::shared_ptr<DFA::Tensor>>>();
-        }
-
-        std::shared_ptr<DFA::Tensor> at (int idx) {
-          if(idx < tensors_->size()) {
-            return tensors_->at(idx);
-          }
-          else {
-            return nullptr;
-          }
-        }
-
-        std::shared_ptr<DFA::Tensor> operator[] (int idx) {
-          return this->at(idx);
-        }
-
-        void AddTensor(std::shared_ptr<DFA::Tensor> new_tensor) {
-          tensors_->push_back(new_tensor);
-        }
-
-
-        void AddTensor(std::string tensor_name, DFA::TensorClass tensor_class, DataClass data_class, std::vector<std::string> correlated_varaibles) {
-
-          std::shared_ptr<std::list<std::string>> corr_vars_to_be_added = std::make_shared<std::list<std::string>>();
-
-          for(auto var : correlated_varaibles) {
-            corr_vars_to_be_added->push_back(var);
-          }
-
-          auto new_tensor = std::make_shared<DFA::Tensor>(tensor_name, tensor_class, data_class, corr_vars_to_be_added);
-          tensors_->push_back(new_tensor);
-        }
-
-        std::shared_ptr<DFA::Tensor> FindTensor(std::string tensor_name) {
-          std::shared_ptr<DFA::Tensor> ret = nullptr;
-
-          for(auto tensor : *tensors_) {
-            if(tensor->GetTensorName() == tensor_name) {
-              ret = tensor;
+                auto new_tensor = std::make_shared<DFA::Tensor>(tensor_name, tensor_class, data_class, corr_vars_to_be_added);
+                tensors_->push_back(new_tensor);
             }
-          }
 
-          return ret;
-        }
+            std::shared_ptr<DFA::Tensor> FindTensor(std::string tensor_name) {
+                std::shared_ptr<DFA::Tensor> ret = nullptr;
 
-        std::shared_ptr<std::list<std::string>> GetTensorVarsInClass(DFA::TensorClass tensor_class) {
-          std::shared_ptr<std::list<std::string>> ret = std::make_shared<std::list<std::string>>();
+                for(auto tensor : *tensors_) {
+                    if(tensor->GetTensorName() == tensor_name) {
+                        ret = tensor;
+                    }
+                }
 
-          for(auto& tensor : *tensors_) {
-            if(tensor->GetTensorClass() == tensor_class) {
-              auto corr_var_list = tensor->GetCoupledVariables();
-              for(auto var : *corr_var_list) {
-                ret->push_back(var);
-              }
+                return ret;
             }
-          }
 
-          ret->sort();
-          ret->unique();
+            std::shared_ptr<std::list<std::string>> GetTensorVarsInClass(DFA::TensorClass tensor_class) {
+                std::shared_ptr<std::list<std::string>> ret = std::make_shared<std::list<std::string>>();
 
-          return ret;
-        }
+                for(auto& tensor : *tensors_) {
+                    if(tensor->GetTensorClass() == tensor_class) {
+                        auto corr_var_list = tensor->GetCoupledVariables();
+                        for(auto var : *corr_var_list) {
+                            ret->push_back(var);
+                        }
+                    }
+                }
 
-        std::shared_ptr<std::list<std::shared_ptr<DFA::Tensor>>> GetTensorsInClass(DFA::TensorClass tensor_class) {
-          std::shared_ptr<std::list<std::shared_ptr<DFA::Tensor>>> ret = std::make_shared<std::list<std::shared_ptr<DFA::Tensor>>>();
+                ret->sort();
+                ret->unique();
 
-          for(auto& tensor : *tensors_) {
-            if(tensor->GetTensorClass() == tensor_class) {
-              ret->push_back(tensor);
+                return ret;
             }
-          }
 
-          return ret;
-        }
+            std::shared_ptr<std::list<std::shared_ptr<DFA::Tensor>>> GetTensorsInClass(DFA::TensorClass tensor_class) {
+                std::shared_ptr<std::list<std::shared_ptr<DFA::Tensor>>> ret = std::make_shared<std::list<std::shared_ptr<DFA::Tensor>>>();
+
+                for(auto& tensor : *tensors_) {
+                    if(tensor->GetTensorClass() == tensor_class) {
+                        ret->push_back(tensor);
+                    }
+                }
+
+                return ret;
+            }
 
 
 
-      protected:
-        std::shared_ptr<std::vector<std::shared_ptr<DFA::Tensor>>> tensors_;
+        protected:
+            std::shared_ptr<std::vector<std::shared_ptr<DFA::Tensor>>> tensors_;
 
-    }; // End of class TensorTable
-  }; // End of namespace DFA
+        }; // End of class TensorTable
+    }; // End of namespace DFA
 }; // End of namespace maestro
 
 #endif

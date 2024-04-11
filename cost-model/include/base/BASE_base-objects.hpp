@@ -29,13 +29,10 @@ Author : Hyoukjun Kwon (hyoukjun@gatech.edu)
 
 namespace maestro {
 
-	extern std::shared_ptr<TL::ErrorHandler> error_handler;
-	extern std::shared_ptr<TL::MessagePrinter> message_printer;
+    extern std::shared_ptr<TL::ErrorHandler> error_handler;
+    extern std::shared_ptr<TL::MessagePrinter> message_printer;
 
-	extern int printout_level;
-
-	void InitializeBaseObjects(int print_lv = 256);
-  void SetPrintOutLevel(int new_lv);
+    void InitializeBaseObjects(int print_lv = 256);
 
 };
 

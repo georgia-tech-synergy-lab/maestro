@@ -3,13 +3,11 @@
 
 
 namespace maestro {
-  namespace CA {
+    namespace CA {
 
-    enum class IterationStatus {Init, Steady, Edge, Unroll, InitEdge, InitUnroll, InitEdgeSpEdge, EdgeSpEdge, NumIterStatus};
-    enum class EstimationType {Min, Max, Exact, NumEstimationTypes};
-    const int num_iter_status = 3;
+        enum class IterationStatus {Init, Edge, Unroll};
+        enum class EstimationType {Min, Max, Exact, NumEstimationTypes};
 
-  };
+    };
 };
-
 #endif

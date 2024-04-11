@@ -24,52 +24,52 @@ Author : Hyoukjun Kwon (hyoukjun@gatech.edu)
 
 namespace maestro {
 
-	namespace AHW {
+    namespace AHW {
 
-		class NetworkOnChipModel {
-			public:
-				NetworkOnChipModel(int bw, int hops, int hop_latency ,bool mc) :
-					bandwidth_(bw), num_average_hops_(hops), latency_per_hops_(hop_latency), multicast_support_(mc) {
-				}
+        class NetworkOnChipModel {
+        public:
+            NetworkOnChipModel(int bw, int hops, int hop_latency ,bool mc) :
+                    bandwidth_(bw), num_average_hops_(hops), latency_per_hops_(hop_latency), multicast_support_(mc) {
+            }
 
-				int GetBandwidth() {
-					return bandwidth_;
-				}
+            int GetBandwidth() {
+                return bandwidth_;
+            }
 
-				bool IsMulticastSupported() {
-					return multicast_support_;
-				}
+            bool IsMulticastSupported() {
+                return multicast_support_;
+            }
 
-				void SetBandwidth(int bw) {
-					bandwidth_ = bw;
-				}
+            void SetBandwidth(int bw) {
+                bandwidth_ = bw;
+            }
 
-				long GetOutStandingDelay(long data_amount) {
-					long delay;
+            long GetOutStandingDelay(long data_amount) {
+                long delay;
 
-					long num_sends;
-					if(data_amount % bandwidth_ != 0) {
-						num_sends = data_amount / bandwidth_ + 1;
-					}
-					else {
-						num_sends = data_amount / bandwidth_;
-					}
+                long num_sends;
+                if(data_amount % bandwidth_ != 0) {
+                    num_sends = data_amount / bandwidth_ + 1;
+                }
+                else {
+                    num_sends = data_amount / bandwidth_;
+                }
 
-					long avg_zero_load_delay = num_average_hops_ * latency_per_hops_;
+                long avg_zero_load_delay = num_average_hops_ * latency_per_hops_;
 
-					delay = avg_zero_load_delay // Head delay
-							+ (num_sends-1); // Pipeline delay
+                delay = avg_zero_load_delay // Head delay
+                        + (num_sends-1); // Pipeline delay
 
-							return delay;
-				} // End of GetOutStandingDelay
+                return delay;
+            } // End of GetOutStandingDelay
 
-			protected:
-				int bandwidth_;
-				int num_average_hops_;
-				int latency_per_hops_;
-				bool multicast_support_;
+        protected:
+            int bandwidth_;
+            int num_average_hops_;
+            int latency_per_hops_;
+            bool multicast_support_;
 
-		}; // End of class NetworkOnChipModel
-	}; // End of namespace abstract_hw
+        }; // End of class NetworkOnChipModel
+    }; // End of namespace abstract_hw
 }; // End of namespace maestro
 #endif

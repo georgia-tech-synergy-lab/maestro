@@ -25,9 +25,6 @@ Author : Hyoukjun Kwon (hyoukjun@gatech.edu)
 
 #include <memory>
 #include <vector>
-
-//#include "option.hpp"
-
 #include "BASE_base-objects.hpp"
 
 #include "DFA_tensor.hpp"
@@ -41,99 +38,63 @@ Author : Hyoukjun Kwon (hyoukjun@gatech.edu)
 
 
 namespace maestro {
-
-  class Configuration {
-
-    public:
-      Configuration(int num_pes, int vector_width, int top_noc_bw, int l1_sram_byte_size, int l2_sram_byte_size)
-      : num_pes_(num_pes) {
-        network_= std::make_shared<DFA::NeuralNetwork>();
-        tensors_ = std::make_shared<DFA::TensorTable>();
-        nocs_ = std::make_shared<std::vector<std::shared_ptr<AHW::NetworkOnChipModel>>>();
-        cluster_analysis_= std::make_shared<std::vector<std::shared_ptr<DFA::ClusterAnalysis>>>();
-        target_accelerator_ = std::make_shared<DSE::Accelerator>
-                                (num_pes, vector_width, top_noc_bw, l1_sram_byte_size, l2_sram_byte_size);
-
-
-      }
-/*
-      Accelerator (int num_pes, int vector_width, int noc_bw, int l1_sram_byte_size, int l2_sram_byte_size)
-        : num_pes_(num_pes), vector_width_(vector_width), noc_bw_(noc_bw) {
-        ReconstructAccelerator(num_pes, vector_width, noc_bw, l1_sram_byte_size, l2_sram_byte_size);
-      }
-*/
-      std::shared_ptr<DFA::NeuralNetwork> network_;
-      std::shared_ptr<DFA::TensorTable> tensors_;
-      std::shared_ptr<std::vector<std::shared_ptr<DFA::ClusterAnalysis>>> cluster_analysis_;
-
-      //Hardware
-      std::shared_ptr<DSE::Accelerator> target_accelerator_;
-      std::shared_ptr<std::vector<std::shared_ptr<AHW::NetworkOnChipModel>>> nocs_;
-
-      int num_pes_;
-  }; // End of class Configuration
-
-  class ConfigurationV2 {
+    class ConfigurationV2 {
 
     public:
-      ConfigurationV2(
-          std::string dfsl_file_name,
-          std::string hw_file_name,
-          std::shared_ptr<std::vector<int>> noc_bw,
-          std::shared_ptr<std::vector<int>> noc_latency,
-          std::shared_ptr<std::vector<bool>> noc_multcast,
-          int num_pes,
-          int simd_width,
-          int top_noc_bw,
-          int l1_sram_byte_size,
-          int l2_sram_byte_size,
-          int offchip_bw) :
-        dfsl_file_name_(dfsl_file_name),
-        hw_file_name_(hw_file_name),
-        noc_multcast_(noc_multcast),
-        noc_latency_(noc_latency),
-        noc_bw_(noc_bw),
-        offchip_bw_(offchip_bw),
-        num_pes_(num_pes),
-        simd_width_(simd_width),
-        l1_size_(l1_sram_byte_size),
-        l2_size_(l2_sram_byte_size) {
-        network_= std::make_shared<DFA::NeuralNetwork>();
-        tensors_ = std::make_shared<std::vector<std::shared_ptr<DFA::TensorTable>>>();
-        nocs_ = std::make_shared<std::vector<std::shared_ptr<AHW::NetworkOnChipModel>>>();
-        cluster_analysis_= std::make_shared<std::vector<std::shared_ptr<DFA::ClusterAnalysis>>>();
-        //TODO: Update NoC setup processes
-        target_accelerator_ = std::make_shared<DSE::Accelerator>
-                                (num_pes, simd_width, top_noc_bw, l1_sram_byte_size, l2_sram_byte_size);
-      }
+        ConfigurationV2(
+                std::string dfsl_file_name,
+                std::string hw_file_name,
+                std::shared_ptr<std::vector<int>> noc_bw,
+                std::shared_ptr<std::vector<int>> noc_latency,
+                std::shared_ptr<std::vector<bool>> noc_multcast,
+                int num_pes,
+                int simd_width,
+                int top_noc_bw,
+                int l1_sram_byte_size,
+                int l2_sram_byte_size,
+                int offchip_bw) :
+                dfsl_file_name_(dfsl_file_name),
+                hw_file_name_(hw_file_name),
+                noc_multcast_(noc_multcast),
+                noc_latency_(noc_latency),
+                noc_bw_(noc_bw),
+                offchip_bw_(offchip_bw),
+                num_pes_(num_pes),
+                simd_width_(simd_width),
+                l1_size_(l1_sram_byte_size),
+                l2_size_(l2_sram_byte_size) {
+            network_= std::make_shared<DFA::NeuralNetwork>();
+            tensors_ = std::make_shared<std::vector<std::shared_ptr<DFA::TensorTable>>>();
+            nocs_ = std::make_shared<std::vector<std::shared_ptr<AHW::NetworkOnChipModel>>>();
+            cluster_analysis_= std::make_shared<std::vector<std::shared_ptr<DFA::ClusterAnalysis>>>();
+            //TODO: Update NoC setup processes
+            target_accelerator_ = std::make_shared<DSE::Accelerator>
+                    (num_pes, simd_width, top_noc_bw, l1_sram_byte_size, l2_sram_byte_size);
+        }
 
-      std::string dfsl_file_name_;
-      std::string hw_file_name_;
-
-
-      std::shared_ptr<DFA::NeuralNetwork> network_;
-
-      std::shared_ptr<std::vector<std::shared_ptr<DFA::TensorTable>>> tensors_;
-      std::shared_ptr<std::vector<std::shared_ptr<DFA::ClusterAnalysis>>> cluster_analysis_;
-
-      //Hardware
-      std::shared_ptr<DSE::Accelerator> target_accelerator_;
-      std::shared_ptr<std::vector<std::shared_ptr<AHW::NetworkOnChipModel>>> nocs_;
-
-      std::shared_ptr<std::vector<bool>> noc_multcast_;
-      std::shared_ptr<std::vector<int>> noc_latency_;
-      std::shared_ptr<std::vector<int>> noc_bw_;
-
-      int num_pes_;
-      int simd_width_;
-      int l1_size_;
-      int l2_size_;
-      int offchip_bw_;
-  }; // End of class Configuration
+        std::string dfsl_file_name_;
+        std::string hw_file_name_;
 
 
+        std::shared_ptr<DFA::NeuralNetwork> network_;
 
+        std::shared_ptr<std::vector<std::shared_ptr<DFA::TensorTable>>> tensors_;
+        std::shared_ptr<std::vector<std::shared_ptr<DFA::ClusterAnalysis>>> cluster_analysis_;
 
+        //Hardware
+        std::shared_ptr<DSE::Accelerator> target_accelerator_;
+        std::shared_ptr<std::vector<std::shared_ptr<AHW::NetworkOnChipModel>>> nocs_;
+
+        std::shared_ptr<std::vector<bool>> noc_multcast_;
+        std::shared_ptr<std::vector<int>> noc_latency_;
+        std::shared_ptr<std::vector<int>> noc_bw_;
+
+        int num_pes_;
+        int simd_width_;
+        int l1_size_;
+        int l2_size_;
+        int offchip_bw_;
+    }; // End of class Configuration
 }; // End of namespace maestro
 
 
