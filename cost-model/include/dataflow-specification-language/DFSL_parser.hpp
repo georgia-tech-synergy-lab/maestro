@@ -55,7 +55,7 @@ namespace maestro {
             Dataflow_Decl, Dataflow_Body, Dataflow_MapSize, Dataflow_MapOffset, Dataflow_MapVar, Dataflow_ClusterSize, Dataflow_ClusterType,
             Accelerator_Identifier, Acclerator_Body,
             PE_Identifier, PE_Body, PE_NumPE, PE_VectorWidth, PE_MultPrecision, PE_AddPrecision,
-            Buffer_Identifier, Buffer_Body, Buffer_Size, NoC_Identifier,Noc_Name_Identifier, SubNoC_Body, NoC_Body, NoC_BW, NoC_Latency,
+            Buffer_Identifier, Buffer_Body, Buffer_Size, NoC_Identifier,Noc_Name_Identifier, SubNoC_Body, NoC_Body, NoC_BW, NoC_Latency, Precision_Decl, Precision_Body
         };
 
         class InputParser : public MAESTROClass {
@@ -107,6 +107,7 @@ namespace maestro {
                 std::shared_ptr<std::map<std::string, int>> constant_map = std::make_shared<std::map<std::string, int>>();
 
                 std::string stride_dim;
+                std::string precision;
 
                 int map_size = 0;
                 int map_offset = 0;
@@ -242,14 +243,52 @@ namespace maestro {
                                 else if(tkn == DFSL::layer_dim_decl_) {
                                     had_dim_def = true;
                                     state_ = ParserState::Dimension_Decl;
-                                }
-                                else if(tkn == DFSL::layer_dataflow_decl_) {
+                                }else if (tkn == DFSL::layer_precision_decl_){
+                                    state_ = ParserState :: Precision_Decl;
+                                }else if(tkn == DFSL::layer_dataflow_decl_) {
                                     state_ = ParserState::Dataflow_Decl;
-                                }
-                                else {
+                                }else {
                                     ParseError(line_number);
                                 }
 
+                                break;
+                            }
+
+                            case ParserState:: Precision_Decl: {
+                                if(tkn == DFSL::brace_open_) {
+                                    state_ = ParserState::Precision_Body;
+                                }
+                                else {
+                                    std::cout << "[Error] Syntax error; precision description: Precision { precision }. " << std::endl;
+                                    ParseError(line_number);
+                                }
+
+                                break;
+                            }
+
+                            case ParserState::Precision_Body: {
+                                if(tkn == DFSL::brace_close_) {
+                                    state_ = ParserState::Layer_Body;
+                                }
+                                else {
+                                    if (tkn == DFSL::layer_quant_fp32) {
+                                        curr_layer->setQuantization(LayerQuantizationType::FP32);
+                                    } else if (tkn == DFSL::layer_quant_fp16) {
+                                        curr_layer->setQuantization(LayerQuantizationType::FP16);
+                                    } else if (tkn == DFSL::layer_quant_fp8) {
+                                        curr_layer->setQuantization(LayerQuantizationType::FP8);
+                                    } else if (tkn == DFSL::layer_quant_int32) {
+                                        curr_layer->setQuantization(LayerQuantizationType::INT32);
+                                    } else if (tkn == DFSL::layer_quant_int16) {
+                                        curr_layer->setQuantization(LayerQuantizationType::INT16);
+                                    } else if (tkn == DFSL::layer_quant_int8) {
+                                        curr_layer->setQuantization(LayerQuantizationType::INT8);
+                                    } else {
+                                        std::cout << "Problem with Precision. Quantization not recognized!\n";
+                                        ParseError(line_number);
+                                    }
+                                    state_ = ParserState::Precision_Body;
+                                }
                                 break;
                             }
 

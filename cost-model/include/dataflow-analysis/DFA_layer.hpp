@@ -32,7 +32,8 @@ namespace maestro{
 
 //    enum class ConvLayerDimensionIdentifier {K, C, R, S ,Y, X};
     enum class LayerType {CONV, DSCONV, FC, POOL, TRCONV, NGCONV, LSTM, GEMM, NumLayerTypes};
-
+    enum class LayerQuantizationType { FP32, FP16, FP8, INT32, INT16, INT8};
+    
     namespace DFA {
 
         class LayerDimension {
@@ -72,6 +73,7 @@ namespace maestro{
         public:
 
             Layer(std::string name) : name_(name), type_(LayerType::NumLayerTypes) {}
+            Layer(std::string name, LayerQuantizationType quantizationType) : name_(name), type_(LayerType::NumLayerTypes), quantization_(quantizationType) {}
 
             Layer(std::string name, LayerType type, std::shared_ptr<std::vector<std::shared_ptr<LayerDimension>>> dimensions) :
                     name_(name), type_(type), dimensions_(dimensions) {
@@ -111,6 +113,14 @@ namespace maestro{
                 return type_;
             }
 
+            void setQuantization(LayerQuantizationType newQuantization) {
+                quantization_ = newQuantization;
+            }
+
+            LayerQuantizationType getQuantization() const {
+                return quantization_;
+            }
+
             int GetSize(std::string id) {
                 for (auto &it : *dimensions_) {
                     if(it->GetName() == id) {
@@ -146,6 +156,7 @@ namespace maestro{
         protected:
             LayerType type_;
             std::string name_;
+            LayerQuantizationType quantization_;
             std::shared_ptr<std::vector<std::shared_ptr<LayerDimension>>> dimensions_;
             std::shared_ptr<DFA::DirectiveTable> dataflow_directives_;
 

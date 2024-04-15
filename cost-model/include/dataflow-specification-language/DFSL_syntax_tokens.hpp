@@ -57,6 +57,15 @@ namespace maestro {
         const std::string layer_type_gemm_ = "GEMM";
         const std::string layer_stride_decl_ = "Stride";
 
+        const std::string layer_precision_decl_ = "Precision";
+        const std::string layer_quant_fp32 = "FP32";
+        const std::string layer_quant_fp16 = "FP16";
+        const std::string layer_quant_fp8 = "FP8";
+        const std::string layer_quant_int32 = "INT32";
+        const std::string layer_quant_int16 = "INT16";
+        const std::string layer_quant_int8 = "INT8";
+
+
         const std::string layer_dim_decl_ = "Dimensions";
         const std::string layer_dim_input_batch_    = "N";
         const std::string layer_dim_group_          = "G";
